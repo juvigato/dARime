@@ -10,15 +10,24 @@ import UIKit
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController, ARSessionDelegate {
+class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     
     @IBOutlet var sceneView: ARSCNView!
     var currentFaceAnchor: ARFaceAnchor?
     var contentNode = SCNNode()
+    var face:SCNNode = SCNNode()
+    var buttonT = UIButton()
+    
+    let node = SCNNode()
+
+    
+    var needChange = true
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        createButton()
         guard ARFaceTrackingConfiguration.isSupported else {
             fatalError("Face tracking is not supported on this device")
         }
@@ -36,34 +45,63 @@ class ViewController: UIViewController, ARSessionDelegate {
            super.viewWillDisappear(animated)
            sceneView.session.pause()
     }
-
     
-}
+    func createButton() {
+        
+        let viewHeight = self.view.frame.height
+        let viewWidth = self.view.frame.width
+        
+        buttonT.frame = CGRect(x: viewWidth/1.60, y: viewHeight/2 + 200, width: 160 , height: 80)
+        buttonT.backgroundColor = .orange
+        
+        buttonT.addTarget(self, action: #selector(handleButton(_:)), for: .touchDown)
 
-extension ViewController: ARSCNViewDelegate {
+        sceneView.addSubview(buttonT)
+
+    }
+    
+    @objc func handleButton(_ gestureRecognize: UIGestureRecognizer){
+        if needChange {
+            buttonT.addTarget(self, action: #selector(handleButton(_:)), for: .touchDown)
+
+            needChange = false
+            face.removeFromParentNode()
+            face = Random3DNodes().random3DPicker()
+            node.addChildNode(face)
+        } else {
+            needChange = true
+        }
+    }
+    
     
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
         
         guard let faceAnchor = anchor as? ARFaceAnchor else { return nil }
         currentFaceAnchor = faceAnchor
         
-        contentNode = SCNReferenceNode(named: "cabeca")
+        let random = Random3DNodes()
         
-//        let nodeTeste = SCNBox(width: 0.1, height: 0.1, length: 0.1, chamferRadius: 0)
-//        nodeTeste.firstMaterial?.diffuse.contents = UIColor.orange
-//        nodeTeste.firstMaterial?.isDoubleSided = true
-//        let nnode = SCNNode(geometry: nodeTeste)
+        face = random.random3DPicker()
         
+        node.addChildNode(face)
         
-        
-        return contentNode
+        return node
     }
-    
+        
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
         
         guard let faceAnchor = anchor as? ARFaceAnchor
         else { return }
         
+//        if !faceAnchor.isTracked && needChange {
+//
+//            needChange = false
+//            face.removeFromParentNode()
+//            face = Random3DNodes().random3DPicker()
+//            node.addChildNode(face)
+//        } else {
+//            needChange = true
+//        }
         
     }
     

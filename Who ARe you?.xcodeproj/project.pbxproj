@@ -14,6 +14,7 @@
 		BC06967123FB06C800502128 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BC06967023FB06C800502128 /* Assets.xcassets */; };
 		BC06967423FB06C800502128 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BC06967223FB06C800502128 /* LaunchScreen.storyboard */; };
 		BC06967C23FB071C00502128 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC06967B23FB071C00502128 /* Utilities.swift */; };
+		BC06967E23FB0C4200502128 /* Random3DNodes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC06967D23FB0C4200502128 /* Random3DNodes.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		BC06967323FB06C800502128 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BC06967523FB06C800502128 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BC06967B23FB071C00502128 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		BC06967D23FB0C4200502128 /* Random3DNodes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Random3DNodes.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 				BC06966923FB06C500502128 /* art.scnassets */,
 				BC06966B23FB06C500502128 /* ViewController.swift */,
 				BC06967B23FB071C00502128 /* Utilities.swift */,
+				BC06967D23FB0C4200502128 /* Random3DNodes.swift */,
 				BC06966D23FB06C500502128 /* Main.storyboard */,
 				BC06967023FB06C800502128 /* Assets.xcassets */,
 				BC06967223FB06C800502128 /* LaunchScreen.storyboard */,
@@ -145,6 +148,7 @@
 				BC06967C23FB071C00502128 /* Utilities.swift in Sources */,
 				BC06966C23FB06C500502128 /* ViewController.swift in Sources */,
 				BC06966823FB06C500502128 /* AppDelegate.swift in Sources */,
+				BC06967E23FB0C4200502128 /* Random3DNodes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
