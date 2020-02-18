@@ -12,7 +12,7 @@ import ARKit
 
 class Random3DNodes: SCNReferenceNode {
     lazy var faceCat = SCNReferenceNode(named: "cabeca")
-    lazy var faceDog = SCNReferenceNode(named: "robotHead")
+    lazy var faceDog = SCNReferenceNode(named: "cat")
     
     
     func random3DPicker() -> SCNReferenceNode {
