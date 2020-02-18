@@ -21,6 +21,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     var passButton = UIButton()
     
     let node = SCNNode()
+    let random = Random3DNodes()
 
 
     override func viewDidLoad() {
@@ -86,18 +87,13 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     
     @objc func handleCheckButton(_ gestureRecognize: UIGestureRecognizer){ //Quando clica em acerto, faz algo
         face.removeFromParentNode()
-        face = Random3DNodes().random3DPicker()
+        face = random.random3DPicker()
         node.addChildNode(face)
     }
     
     @objc func handlePassButton(_ gestureRecognize: UIGestureRecognizer){ // QUando clica em passar, faz algo
         
     }
-    
-    
-    
-    
-    
     
     @objc func playButtonRecognizer(_ gestureRecognize: UIGestureRecognizer){
             checkButtonFunc()
@@ -110,9 +106,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         
         guard let faceAnchor = anchor as? ARFaceAnchor else { return nil }
         currentFaceAnchor = faceAnchor
-        
-        let random = Random3DNodes()
-        
+
         face = random.random3DPicker()
         
         node.addChildNode(face)
@@ -134,7 +128,5 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
 //        } else {
 //            needChange = true
 //        }
-        
     }
-    
 }
