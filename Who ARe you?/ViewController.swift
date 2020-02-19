@@ -19,6 +19,11 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     var playButton = UIButton()
     var checkButton = UIButton()
     var passButton = UIButton()
+    var pontuação:Int = 0
+    var timerLabelWorks = UILabel()
+    var timer = Timer()
+    var tempo = 60
+    var boolTimer = false
     
     let node = SCNNode()
     let random = Random3DNodes()
@@ -28,6 +33,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         super.viewDidLoad()
         
         createButton()
+        
         guard ARFaceTrackingConfiguration.isSupported else {
             fatalError("Face tracking is not supported on this device")
         }
@@ -60,7 +66,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
 
     }
     
-    func checkButtonFunc() {
+    func passButtonClicked() {
         let viewHeight = self.view.frame.height
         let viewWidth = self.view.frame.width
         
@@ -72,7 +78,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         sceneView.addSubview(passButton)
     }
     
-    func passButtonFunc() {
+    func checkButtonClicked() {
         let viewHeight = self.view.frame.height
         let viewWidth = self.view.frame.width
         
@@ -81,23 +87,69 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         
         checkButton.addTarget(self, action: #selector(handlePassButton(_:)), for: .touchDown) //vai realizar uma ação quando tocado
         
+        createLabelTimer()
+        iniciarTimer()
+        
         sceneView.addSubview(checkButton)
     }
     
-    
-    @objc func handleCheckButton(_ gestureRecognize: UIGestureRecognizer){ //Quando clica em acerto, faz algo
-        face.removeFromParentNode()
-        face = random.random3DPicker()
-        node.addChildNode(face)
+    func createLabelTimer(){
+        timerLabelWorks.frame = CGRect(x: 0, y: 0, width: 200, height: 100 )
+        timerLabelWorks.font = timerLabelWorks.font.withSize(50)
+        timerLabelWorks.textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        timerLabelWorks.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/10)
+        timerLabelWorks.textAlignment = .center
+        timerLabelWorks.text = "60"
+        self.view.addSubview(timerLabelWorks)
     }
     
-    @objc func handlePassButton(_ gestureRecognize: UIGestureRecognizer){ // QUando clica em passar, faz algo
+    func iniciarTimer(){
+        if boolTimer == false {
+            updateTimer()
+            boolTimer = true
+        }
+    }
+    
+    func updateTimer(){
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: {[weak self] (_) in
+            guard let strongSelf = self else {return}
+            
+            strongSelf.tempo -= 1
+            strongSelf.timerLabelWorks.text = "\(strongSelf.tempo)"
+            
+            //strongSelf.timer.invalidate() isso para o timer
+            if strongSelf.tempo == 0 {
+                strongSelf.timer.invalidate()
+                strongSelf.timerLabelWorks.text = "Parou"
+            }
+            
+        })
+    }
+    
+    //Quando clica em acerto, faz algo
+    @objc func handleCheckButton(_ gestureRecognize: UIGestureRecognizer){
+        face.removeFromParentNode()
+        face = random.random3DPicker()
+        
+        
+        
+        if face.name == "vazio" {
+            // venceu
+            
+        } else {
+            pontuação += 1
+            node.addChildNode(face)
+        }
+    }
+    
+    // Quando clica em passar, faz algo
+    @objc func handlePassButton(_ gestureRecognize: UIGestureRecognizer){
         
     }
     
     @objc func playButtonRecognizer(_ gestureRecognize: UIGestureRecognizer){
-            checkButtonFunc()
-            passButtonFunc()
+            passButtonClicked()
+            checkButtonClicked()
             playButton.removeFromSuperview()
     }
     
@@ -107,9 +159,9 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         guard let faceAnchor = anchor as? ARFaceAnchor else { return nil }
         currentFaceAnchor = faceAnchor
 
-        face = random.random3DPicker()
-        
-        node.addChildNode(face)
+//        face = random.random3DPicker()
+//
+//        node.addChildNode(face)
         
         return node
     }
