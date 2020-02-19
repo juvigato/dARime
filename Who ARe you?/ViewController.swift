@@ -21,6 +21,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     var passButton = UIButton()
     var pontuação:Int = 0
     var timerLabelWorks = UILabel()
+    var lblPontuacao = UILabel()
     var timer = Timer()
     var tempo = 60
     var boolTimer = false
@@ -93,7 +94,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         sceneView.addSubview(checkButton)
     }
     
-    func createLabelTimer(){
+    func createLabelTimer() {
         timerLabelWorks.frame = CGRect(x: 0, y: 0, width: 200, height: 100 )
         timerLabelWorks.font = timerLabelWorks.font.withSize(50)
         timerLabelWorks.textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
@@ -101,6 +102,16 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         timerLabelWorks.textAlignment = .center
         timerLabelWorks.text = "60"
         self.view.addSubview(timerLabelWorks)
+    }
+    
+    func createLblPontuacao() {
+        lblPontuacao.frame = CGRect(x: 0, y: 0, width: 250, height: 100 )
+        lblPontuacao.font = timerLabelWorks.font.withSize(40)
+        lblPontuacao.textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        lblPontuacao.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/1.5)
+        lblPontuacao.textAlignment = .center
+        lblPontuacao.text = ("Pontuação: \(String(pontuação))")
+        self.view.addSubview(lblPontuacao)
     }
     
     func iniciarTimer(){
@@ -118,9 +129,10 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
             strongSelf.timerLabelWorks.text = "\(strongSelf.tempo)"
             
             //strongSelf.timer.invalidate() isso para o timer
-            if strongSelf.tempo == 0 {
+            if strongSelf.tempo == 0 || strongSelf.pontuação == 2 {
                 strongSelf.timer.invalidate()
                 strongSelf.timerLabelWorks.text = "Parou"
+                strongSelf.createLblPontuacao()
             }
             
         })
