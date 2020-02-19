@@ -29,7 +29,6 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     let node = SCNNode()
     let random = Random3DNodes()
 
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -60,14 +59,17 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         
         playButton.frame = CGRect(x: viewWidth/3.2, y: viewHeight/2 + 200, width: 160 , height: 80)
         playButton.backgroundColor = .orange
+         
+        playButton.setTitle("Jogar", for: .normal)
+        playButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        playButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 35)
         
         playButton.addTarget(self, action: #selector(playButtonRecognizer(_:)), for: .touchDown)
 
         sceneView.addSubview(playButton)
-
     }
     
-    func passButtonClicked() {
+    func createPassButton() {
         let viewHeight = self.view.frame.height
         let viewWidth = self.view.frame.width
         
@@ -79,7 +81,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         sceneView.addSubview(passButton)
     }
     
-    func checkButtonClicked() {
+    func createCheckButton() {
         let viewHeight = self.view.frame.height
         let viewWidth = self.view.frame.width
         
@@ -131,10 +133,10 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
             //strongSelf.timer.invalidate() isso para o timer
             if strongSelf.tempo == 0 || strongSelf.pontuação == 2 {
                 strongSelf.timer.invalidate()
-                strongSelf.timerLabelWorks.text = "Parou"
+//                strongSelf.timerLabelWorks.text = "Parou"
+                strongSelf.timerLabelWorks.isHidden = true
                 strongSelf.createLblPontuacao()
             }
-            
         })
     }
     
@@ -160,8 +162,8 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     }
     
     @objc func playButtonRecognizer(_ gestureRecognize: UIGestureRecognizer){
-            passButtonClicked()
-            checkButtonClicked()
+            createPassButton()
+            createCheckButton()
             playButton.removeFromSuperview()
     }
     
