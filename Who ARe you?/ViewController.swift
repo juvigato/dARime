@@ -19,15 +19,18 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     var playButton = UIButton()
     var checkButton = UIButton()
     var passButton = UIButton()
+    var repeatButton = UIButton()
     var pontuação:Int = 0
     var timerLabelWorks = UILabel()
+    var lblPontuacao = UILabel()
     var timer = Timer()
     var tempo = 60
     var boolTimer = false
     
     let node = SCNNode()
     let random = Random3DNodes()
-
+    var viewHeight: CGFloat = 0.0
+    var viewWidth: CGFloat = 0.0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +41,8 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
             fatalError("Face tracking is not supported on this device")
         }
         sceneView.delegate = self
+        viewHeight = self.view.frame.height
+        viewWidth = self.view.frame.width
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -53,37 +58,39 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     }
     
     func createButton() {
-        
-        let viewHeight = self.view.frame.height
-        let viewWidth = self.view.frame.width
-        
         playButton.frame = CGRect(x: viewWidth/3.2, y: viewHeight/2 + 200, width: 160 , height: 80)
         playButton.backgroundColor = .orange
+        playButton.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/1.3)
+         
+        playButton.setTitle("Jogar", for: .normal)
+        playButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        playButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 35)
         
-        playButton.addTarget(self, action: #selector(playButtonRecognizer(_:)), for: .touchDown)
+        playButton.addTarget(self, action: #selector(handlePlayButton(_:)), for: .touchDown)
 
         sceneView.addSubview(playButton)
-
     }
     
-    func passButtonClicked() {
-        let viewHeight = self.view.frame.height
-        let viewWidth = self.view.frame.width
-        
+    func createPassButton() {
         passButton.frame = CGRect(x: viewWidth/1.6, y: viewHeight/2 + 200, width: 160 , height: 80)
         passButton.backgroundColor = .orange
+        
+        passButton.setTitle("Acertou", for: .normal)
+        passButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        passButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 35)
         
         passButton.addTarget(self, action: #selector(handleCheckButton(_:)), for: .touchDown) //vai realizar uma ação quando tocado
         
         sceneView.addSubview(passButton)
     }
     
-    func checkButtonClicked() {
-        let viewHeight = self.view.frame.height
-        let viewWidth = self.view.frame.width
-        
+    func createCheckButton() {
         checkButton.frame = CGRect(x: viewWidth/500, y: viewHeight/2 + 200, width: 160 , height: 80)
         checkButton.backgroundColor = .orange
+        
+        checkButton.setTitle("Errou", for: .normal)
+        checkButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        checkButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 35)
         
         checkButton.addTarget(self, action: #selector(handlePassButton(_:)), for: .touchDown) //vai realizar uma ação quando tocado
         
@@ -93,14 +100,38 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         sceneView.addSubview(checkButton)
     }
     
-    func createLabelTimer(){
+    func createRepeatGameButton() {
+        repeatButton.frame = CGRect(x: viewWidth/500, y: viewHeight/2 + 200, width: 250 , height: 100)
+        repeatButton.backgroundColor = .orange
+        repeatButton.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/1.3)
+        
+        repeatButton.setTitle("Jogar de novo", for: .normal)
+        repeatButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        repeatButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 35)
+        
+        repeatButton.addTarget(self, action: #selector(handlePassButton(_:)), for: .touchDown) //vai realizar uma ação quando tocado
+        
+        sceneView.addSubview(repeatButton)
+    }
+    
+    func createLabelTimer() {
         timerLabelWorks.frame = CGRect(x: 0, y: 0, width: 200, height: 100 )
         timerLabelWorks.font = timerLabelWorks.font.withSize(50)
         timerLabelWorks.textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
         timerLabelWorks.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/10)
         timerLabelWorks.textAlignment = .center
-        timerLabelWorks.text = "60"
+//        timerLabelWorks.text = "60"
         self.view.addSubview(timerLabelWorks)
+    }
+    
+    func createLblPontuacao() {
+        lblPontuacao.frame = CGRect(x: 0, y: 0, width: 250, height: 100 )
+        lblPontuacao.font = timerLabelWorks.font.withSize(40)
+        lblPontuacao.textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        lblPontuacao.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/10)
+        lblPontuacao.textAlignment = .center
+        lblPontuacao.text = ("Pontuação: \(String(pontuação))")
+        self.view.addSubview(lblPontuacao)
     }
     
     func iniciarTimer(){
@@ -118,28 +149,29 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
             strongSelf.timerLabelWorks.text = "\(strongSelf.tempo)"
             
             //strongSelf.timer.invalidate() isso para o timer
-            if strongSelf.tempo == 0 {
+            if strongSelf.tempo == 0 || strongSelf.pontuação == 2 {
                 strongSelf.timer.invalidate()
-                strongSelf.timerLabelWorks.text = "Parou"
+                strongSelf.timerLabelWorks.text = ""
+                strongSelf.timerLabelWorks.removeFromSuperview()
+                strongSelf.checkButton.removeFromSuperview()
+                strongSelf.passButton.removeFromSuperview()
+                strongSelf.createLblPontuacao()
+                strongSelf.createRepeatGameButton()
+                strongSelf.tempo = 60
+                strongSelf.repeatButton.addTarget(self, action: #selector(strongSelf.handleRepeatButton(_:)), for: .touchDown)
             }
-            
         })
     }
     
     //Quando clica em acerto, faz algo
     @objc func handleCheckButton(_ gestureRecognize: UIGestureRecognizer){
+        
+        if face.name != "vazio" {
+            pontuação += 1
+        }
         face.removeFromParentNode()
         face = random.random3DPicker()
-        
-        
-        
-        if face.name == "vazio" {
-            // venceu
-            
-        } else {
-            pontuação += 1
-            node.addChildNode(face)
-        }
+        node.addChildNode(face)
     }
     
     // Quando clica em passar, faz algo
@@ -147,12 +179,26 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         
     }
     
-    @objc func playButtonRecognizer(_ gestureRecognize: UIGestureRecognizer){
-            passButtonClicked()
-            checkButtonClicked()
-            playButton.removeFromSuperview()
+    @objc func handlePlayButton(_ gestureRecognize: UIGestureRecognizer){
+        face = random.random3DPicker()
+        node.addChildNode(face)
+        createPassButton()
+        createCheckButton()
+        playButton.removeFromSuperview()
     }
     
+    @objc func handleRepeatButton(_ gestureRecognize: UIGestureRecognizer) {
+        random.arrayMascaras = []
+        pontuação = 0
+        boolTimer = false
+        face.removeFromParentNode()
+        repeatButton.removeFromSuperview()
+        lblPontuacao.removeFromSuperview()
+        face = random.random3DPicker()
+        node.addChildNode(face)
+        createPassButton()
+        createCheckButton()
+    }
     
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
         
