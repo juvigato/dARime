@@ -149,7 +149,8 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
             strongSelf.timerLabelWorks.text = "\(strongSelf.tempo)"
             
             //strongSelf.timer.invalidate() isso para o timer
-            if strongSelf.tempo == 0 || strongSelf.pontuação == 2 {
+            if strongSelf.tempo == 0 || strongSelf.random.arrayMascaras.count == 4 {
+                strongSelf.face.removeFromParentNode()
                 strongSelf.timer.invalidate()
                 strongSelf.timerLabelWorks.text = ""
                 strongSelf.timerLabelWorks.removeFromSuperview()
@@ -165,18 +166,21 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     
     //Quando clica em acerto, faz algo
     @objc func handleCheckButton(_ gestureRecognize: UIGestureRecognizer){
-        
+        face.removeFromParentNode()
         if face.name != "vazio" {
             pontuação += 1
+            face = random.random3DPicker()
+            node.addChildNode(face)
         }
-        face.removeFromParentNode()
-        face = random.random3DPicker()
-        node.addChildNode(face)
     }
     
     // Quando clica em passar, faz algo
     @objc func handlePassButton(_ gestureRecognize: UIGestureRecognizer){
-        
+        face.removeFromParentNode()
+        if face.name != "vazio" {
+            face = random.random3DPicker()
+            node.addChildNode(face)
+        }
     }
     
     @objc func handlePlayButton(_ gestureRecognize: UIGestureRecognizer){
@@ -217,14 +221,8 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         guard let faceAnchor = anchor as? ARFaceAnchor
         else { return }
         
-//        if !faceAnchor.isTracked && needChange {
-//
-//            needChange = false
-//            face.removeFromParentNode()
-//            face = Random3DNodes().random3DPicker()
-//            node.addChildNode(face)
-//        } else {
-//            needChange = true
-//        }
+        if tempo == 0 || random.arrayMascaras.count == 4 {
+            face.removeFromParentNode()
+        }
     }
 }
