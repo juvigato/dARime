@@ -35,6 +35,12 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     let random = Random3DNodes()
     var viewHeight: CGFloat = 0.0
     var viewWidth: CGFloat = 0.0
+    
+    var arrayCat: [String] = ["Felino", "Miau"]
+    var arrayDuck: [String] = ["Quack", "Lago"]
+    var arrayDog: [String] = ["Doméstico", "Lambida"]
+    var arrayMouse: [String] = ["Roedor", "Queijo"]
+    var arrayMonkey: [String] = ["Banana", "Árvores"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,6 +71,8 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         card.backgroundColor = .orange
         card.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2, width: self.view.frame.width , height: 150)
         card.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height) - 90)
+        createLbl(label: lblPalavra1, width: 250, size: 30, nome: arrayCat[0])
+        createLbl(label: lblPalavra2, width: 250, size: 30, nome: arrayCat[1])
         sceneView.addSubview(card)
     }
     
@@ -100,10 +108,15 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
             label.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/10)
         } else if nome == "mascara" {
             label.center = CGPoint(x: (self.view.frame.width/5), y: (self.view.frame.height)/1.13)
-            createCard()
             label.text = face.name
         } else if nome == "" {
             label.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/10)
+        } else if nome == arrayCat[0] {
+            label.center = CGPoint(x: (self.view.frame.width/1.3), y: (self.view.frame.height)/1.1)
+            label.text = nome
+        } else if nome == arrayCat[1] {
+            label.center = CGPoint(x: (self.view.frame.width/1.3), y: (self.view.frame.height)/1.16)
+            label.text = nome
         }
         self.view.addSubview(label)
     }
@@ -123,7 +136,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
             strongSelf.lblTimer.text = "\(strongSelf.tempo)"
             
             //strongSelf.timer.invalidate() isso para o timer
-            if strongSelf.tempo == 0 || strongSelf.random.arrayMascaras.count == 4 {
+            if strongSelf.tempo == 0 || strongSelf.random.arrayMascaras.count == 5 {
                 strongSelf.face.removeFromParentNode()
                 strongSelf.card.removeFromSuperview()
                 strongSelf.timer.invalidate()
@@ -167,6 +180,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         node.addChildNode(face)
         createButton(button: passButton, divisor: 500, title: "Errou", size: 35, width: 160)
         createButton(button: checkButton, divisor: 1.6, title: "Acertou", size: 35, width: 160)
+        createCard()
         playButton.removeFromSuperview()
     }
     
@@ -182,6 +196,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         node.addChildNode(face)
         createButton(button: passButton, divisor: 500, title: "Errou", size: 35, width: 160)
         createButton(button: checkButton, divisor: 1.6, title: "Acertou", size: 35, width: 160)
+        createCard()
     }
     
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
@@ -196,7 +211,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         guard let faceAnchor = anchor as? ARFaceAnchor
         else { return }
         
-        if tempo == 0 || random.arrayMascaras.count == 4 {
+        if tempo == 0 || random.arrayMascaras.count == 5 {
             face.removeFromParentNode()
         }
     }
