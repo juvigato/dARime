@@ -21,11 +21,11 @@ class Random3DNodes: SCNReferenceNode {
     
     func random3DPicker() -> SCNReferenceNode {
         
-        faceCat.name = "cat"
+        faceCat.name = "Gato"
 //        face.name = "face"
         vazio.name = "vazio"
-        faceDuck.name = "duck"
-        faceRat.name = "rat"
+        faceDuck.name = "Pato"
+        faceRat.name = "Rato"
         
         let random3D: [SCNReferenceNode] = [faceCat, faceRat, faceDuck]
         var random = Int.random(in: 0..<random3D.count)

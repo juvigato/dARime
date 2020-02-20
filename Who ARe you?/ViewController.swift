@@ -17,12 +17,13 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     var contentNode = SCNNode()
     var face:SCNNode = SCNNode()
     var playButton = UIButton()
-    var checkButton = UIButton()
     var passButton = UIButton()
+    var checkButton = UIButton()
     var repeatButton = UIButton()
     var pontuação:Int = 0
-    var timerLabelWorks = UILabel()
+    var lblTimer = UILabel()
     var lblPontuacao = UILabel()
+    var lblNome = UILabel()
     var timer = Timer()
     var tempo = 60
     var boolTimer = false
@@ -35,7 +36,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        createButton()
+        createButton(button: playButton, divisor: 3.2, title: "Jogar", size: 35, width: 160)
         
         guard ARFaceTrackingConfiguration.isSupported else {
             fatalError("Face tracking is not supported on this device")
@@ -57,81 +58,38 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
            sceneView.session.pause()
     }
     
-    func createButton() {
-        playButton.frame = CGRect(x: viewWidth/3.2, y: viewHeight/2 + 200, width: 160 , height: 80)
-        playButton.backgroundColor = .orange
-        playButton.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/1.3)
-         
-        playButton.setTitle("Jogar", for: .normal)
-        playButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        playButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 35)
-        
-        playButton.addTarget(self, action: #selector(handlePlayButton(_:)), for: .touchDown)
-
-        sceneView.addSubview(playButton)
+    func createButton(button: UIButton, divisor:CGFloat, title: String, size: CGFloat, width: CGFloat) {
+        button.frame = CGRect(x: viewWidth/divisor, y: viewHeight/2 + 200, width: width , height: 80)
+        button.backgroundColor = .orange
+        button.setTitle(title, for: .normal)
+        button.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        button.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: size)
+        if button == playButton {
+            button.addTarget(self, action: #selector(handlePlayButton(_:)), for: .touchDown)
+            button.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/1.3)
+        } else if button == checkButton {
+            button.addTarget(self, action: #selector(handleCheckButton(_:)), for: .touchDown)
+            createLbl(label: lblTimer, width: 200, size: 50, nome: "")
+            iniciarTimer()
+        } else if button == passButton {
+            button.addTarget(self, action: #selector(handlePassButton(_:)), for: .touchDown)
+        } else {
+            button.addTarget(self, action: #selector(handlePassButton(_:)), for: .touchDown)
+            button.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/1.3)
+        }
+        sceneView.addSubview(button)
     }
     
-    func createPassButton() {
-        passButton.frame = CGRect(x: viewWidth/1.6, y: viewHeight/2 + 200, width: 160 , height: 80)
-        passButton.backgroundColor = .orange
-        
-        passButton.setTitle("Acertou", for: .normal)
-        passButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        passButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 35)
-        
-        passButton.addTarget(self, action: #selector(handleCheckButton(_:)), for: .touchDown) //vai realizar uma ação quando tocado
-        
-        sceneView.addSubview(passButton)
-    }
-    
-    func createCheckButton() {
-        checkButton.frame = CGRect(x: viewWidth/500, y: viewHeight/2 + 200, width: 160 , height: 80)
-        checkButton.backgroundColor = .orange
-        
-        checkButton.setTitle("Errou", for: .normal)
-        checkButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        checkButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 35)
-        
-        checkButton.addTarget(self, action: #selector(handlePassButton(_:)), for: .touchDown) //vai realizar uma ação quando tocado
-        
-        createLabelTimer()
-        iniciarTimer()
-        
-        sceneView.addSubview(checkButton)
-    }
-    
-    func createRepeatGameButton() {
-        repeatButton.frame = CGRect(x: viewWidth/500, y: viewHeight/2 + 200, width: 250 , height: 100)
-        repeatButton.backgroundColor = .orange
-        repeatButton.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/1.3)
-        
-        repeatButton.setTitle("Jogar de novo", for: .normal)
-        repeatButton.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        repeatButton.titleLabel?.font = UIFont(name: "HelveticaNeue-Thin", size: 35)
-        
-        repeatButton.addTarget(self, action: #selector(handlePassButton(_:)), for: .touchDown) //vai realizar uma ação quando tocado
-        
-        sceneView.addSubview(repeatButton)
-    }
-    
-    func createLabelTimer() {
-        timerLabelWorks.frame = CGRect(x: 0, y: 0, width: 200, height: 100 )
-        timerLabelWorks.font = timerLabelWorks.font.withSize(50)
-        timerLabelWorks.textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
-        timerLabelWorks.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/10)
-        timerLabelWorks.textAlignment = .center
-//        timerLabelWorks.text = "60"
-        self.view.addSubview(timerLabelWorks)
-    }
-    
-    func createLblPontuacao() {
-        lblPontuacao.frame = CGRect(x: 0, y: 0, width: 250, height: 100 )
-        lblPontuacao.font = timerLabelWorks.font.withSize(40)
-        lblPontuacao.textColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
-        lblPontuacao.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/10)
-        lblPontuacao.textAlignment = .center
-        lblPontuacao.text = ("Pontuação: \(String(pontuação))")
-        self.view.addSubview(lblPontuacao)
+    func createLbl(label: UILabel, width: Int, size:CGFloat, nome: String) {
+        label.frame = CGRect(x: 0, y: 0, width: width, height: 100)
+        label.font = lblTimer.font.withSize(size)
+        label.textColor = #colorLiteral(red: 0.8039215686, green: 0.8039215686, blue: 0.8039215686, alpha: 1)
+        label.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/10)
+        label.textAlignment = .center
+        if nome == "Pontuação" {
+            lblPontuacao.text = ("Pontuação: \(String(pontuação))")
+        }
+        self.view.addSubview(label)
     }
     
     func iniciarTimer(){
@@ -146,18 +104,18 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
             guard let strongSelf = self else {return}
             
             strongSelf.tempo -= 1
-            strongSelf.timerLabelWorks.text = "\(strongSelf.tempo)"
+            strongSelf.lblTimer.text = "\(strongSelf.tempo)"
             
             //strongSelf.timer.invalidate() isso para o timer
             if strongSelf.tempo == 0 || strongSelf.random.arrayMascaras.count == 4 {
                 strongSelf.face.removeFromParentNode()
                 strongSelf.timer.invalidate()
-                strongSelf.timerLabelWorks.text = ""
-                strongSelf.timerLabelWorks.removeFromSuperview()
-                strongSelf.checkButton.removeFromSuperview()
+                strongSelf.lblTimer.text = ""
+                strongSelf.lblTimer.removeFromSuperview()
                 strongSelf.passButton.removeFromSuperview()
-                strongSelf.createLblPontuacao()
-                strongSelf.createRepeatGameButton()
+                strongSelf.checkButton.removeFromSuperview()
+                strongSelf.createLbl(label: strongSelf.lblPontuacao, width: 250, size: 40, nome: "Pontuação")
+                strongSelf.createButton(button: strongSelf.repeatButton, divisor: 500, title: "Jogar de novo", size: 35, width: 250)
                 strongSelf.tempo = 60
                 strongSelf.repeatButton.addTarget(self, action: #selector(strongSelf.handleRepeatButton(_:)), for: .touchDown)
             }
@@ -170,6 +128,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         if face.name != "vazio" {
             pontuação += 1
             face = random.random3DPicker()
+            createLbl(label: lblNome, width: <#T##Int#>, size: <#T##CGFloat#>, nome: <#T##String#>)
             node.addChildNode(face)
         }
     }
@@ -186,8 +145,10 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     @objc func handlePlayButton(_ gestureRecognize: UIGestureRecognizer){
         face = random.random3DPicker()
         node.addChildNode(face)
-        createPassButton()
-        createCheckButton()
+        createButton(button: passButton, divisor: 500, title: "Errou", size: 35, width: 160)
+        createButton(button: checkButton, divisor: 1.6, title: "Acertou", size: 35, width: 160)
+//        createPassButton()
+//        createCheckButton()
         playButton.removeFromSuperview()
     }
     
@@ -200,8 +161,8 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         lblPontuacao.removeFromSuperview()
         face = random.random3DPicker()
         node.addChildNode(face)
-        createPassButton()
-        createCheckButton()
+        createButton(button: passButton, divisor: 500, title: "Errou", size: 35, width: 160)
+        createButton(button: checkButton, divisor: 1.6, title: "Acertou", size: 35, width: 160)
     }
     
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
