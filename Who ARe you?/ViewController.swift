@@ -16,6 +16,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     var currentFaceAnchor: ARFaceAnchor?
     var contentNode = SCNNode()
     var face:SCNNode = SCNNode()
+    var card = UIView()
     var playButton = UIButton()
     var passButton = UIButton()
     var checkButton = UIButton()
@@ -24,6 +25,8 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     var lblTimer = UILabel()
     var lblPontuacao = UILabel()
     var lblNome = UILabel()
+    var lblPalavra1 = UILabel()
+    var lblPalavra2 = UILabel()
     var timer = Timer()
     var tempo = 60
     var boolTimer = false
@@ -58,8 +61,15 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
            sceneView.session.pause()
     }
     
+    func createCard() {
+        card.backgroundColor = .orange
+        card.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2, width: self.view.frame.width , height: 150)
+        card.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height) - 90)
+        sceneView.addSubview(card)
+    }
+    
     func createButton(button: UIButton, divisor:CGFloat, title: String, size: CGFloat, width: CGFloat) {
-        button.frame = CGRect(x: viewWidth/divisor, y: viewHeight/2 + 200, width: width , height: 80)
+        button.frame = CGRect(x: viewWidth/divisor, y: viewHeight/2 + 180, width: width , height: 80)
         button.backgroundColor = .orange
         button.setTitle(title, for: .normal)
         button.titleLabel?.textColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
@@ -83,11 +93,17 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     func createLbl(label: UILabel, width: Int, size:CGFloat, nome: String) {
         label.frame = CGRect(x: 0, y: 0, width: width, height: 100)
         label.font = lblTimer.font.withSize(size)
-        label.textColor = #colorLiteral(red: 0.8039215686, green: 0.8039215686, blue: 0.8039215686, alpha: 1)
-        label.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/10)
+        label.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         label.textAlignment = .center
         if nome == "Pontuação" {
-            lblPontuacao.text = ("Pontuação: \(String(pontuação))")
+            label.text = ("Pontuação: \(String(pontuação))")
+            label.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/10)
+        } else if nome == "mascara" {
+            label.center = CGPoint(x: (self.view.frame.width/5), y: (self.view.frame.height)/1.13)
+            createCard()
+            label.text = face.name
+        } else if nome == "" {
+            label.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/10)
         }
         self.view.addSubview(label)
     }
@@ -109,6 +125,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
             //strongSelf.timer.invalidate() isso para o timer
             if strongSelf.tempo == 0 || strongSelf.random.arrayMascaras.count == 4 {
                 strongSelf.face.removeFromParentNode()
+                strongSelf.card.removeFromSuperview()
                 strongSelf.timer.invalidate()
                 strongSelf.lblTimer.text = ""
                 strongSelf.lblTimer.removeFromSuperview()
@@ -116,6 +133,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
                 strongSelf.checkButton.removeFromSuperview()
                 strongSelf.createLbl(label: strongSelf.lblPontuacao, width: 250, size: 40, nome: "Pontuação")
                 strongSelf.createButton(button: strongSelf.repeatButton, divisor: 500, title: "Jogar de novo", size: 35, width: 250)
+                strongSelf.lblNome.text = ""
                 strongSelf.tempo = 60
                 strongSelf.repeatButton.addTarget(self, action: #selector(strongSelf.handleRepeatButton(_:)), for: .touchDown)
             }
@@ -125,10 +143,10 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     //Quando clica em acerto, faz algo
     @objc func handleCheckButton(_ gestureRecognize: UIGestureRecognizer){
         face.removeFromParentNode()
-        if face.name != "vazio" {
+        if face.name != "" {
             pontuação += 1
             face = random.random3DPicker()
-            createLbl(label: lblNome, width: <#T##Int#>, size: <#T##CGFloat#>, nome: <#T##String#>)
+            createLbl(label: lblNome, width: 200, size: 40, nome: "mascara")
             node.addChildNode(face)
         }
     }
@@ -136,19 +154,19 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     // Quando clica em passar, faz algo
     @objc func handlePassButton(_ gestureRecognize: UIGestureRecognizer){
         face.removeFromParentNode()
-        if face.name != "vazio" {
+        if face.name != "" {
             face = random.random3DPicker()
+            createLbl(label: lblNome, width: 200, size: 40, nome: "mascara")
             node.addChildNode(face)
         }
     }
     
     @objc func handlePlayButton(_ gestureRecognize: UIGestureRecognizer){
         face = random.random3DPicker()
+        createLbl(label: lblNome, width: 200, size: 40, nome: "mascara")
         node.addChildNode(face)
         createButton(button: passButton, divisor: 500, title: "Errou", size: 35, width: 160)
         createButton(button: checkButton, divisor: 1.6, title: "Acertou", size: 35, width: 160)
-//        createPassButton()
-//        createCheckButton()
         playButton.removeFromSuperview()
     }
     
@@ -160,6 +178,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         repeatButton.removeFromSuperview()
         lblPontuacao.removeFromSuperview()
         face = random.random3DPicker()
+        createLbl(label: lblNome, width: 200, size: 40, nome: "mascara")
         node.addChildNode(face)
         createButton(button: passButton, divisor: 500, title: "Errou", size: 35, width: 160)
         createButton(button: checkButton, divisor: 1.6, title: "Acertou", size: 35, width: 160)
@@ -169,11 +188,6 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         
         guard let faceAnchor = anchor as? ARFaceAnchor else { return nil }
         currentFaceAnchor = faceAnchor
-
-//        face = random.random3DPicker()
-//
-//        node.addChildNode(face)
-        
         return node
     }
         

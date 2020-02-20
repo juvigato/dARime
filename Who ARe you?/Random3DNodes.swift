@@ -23,7 +23,7 @@ class Random3DNodes: SCNReferenceNode {
         
         faceCat.name = "Gato"
 //        face.name = "face"
-        vazio.name = "vazio"
+        vazio.name = ""
         faceDuck.name = "Pato"
         faceRat.name = "Rato"
         
