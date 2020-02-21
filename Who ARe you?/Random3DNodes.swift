@@ -12,7 +12,7 @@ import ARKit
 
 class Random3DNodes: SCNReferenceNode {
     lazy var faceCat = SCNReferenceNode(named: "cat")
-//    lazy var face = SCNReferenceNode(named: "cabeca")
+    lazy var faceDog = SCNReferenceNode(named: "dog")
     lazy var vazio = SCNReferenceNode(named: "vazio")
     lazy var faceDuck = SCNReferenceNode(named: "duck")
     lazy var faceRat = SCNReferenceNode(named: "rat")
@@ -21,18 +21,18 @@ class Random3DNodes: SCNReferenceNode {
     
     func random3DPicker() -> SCNReferenceNode {
         
-        faceCat.name = "cat"
-//        face.name = "face"
-        vazio.name = "vazio"
-        faceDuck.name = "duck"
-        faceRat.name = "rat"
+        faceCat.name = "Gato"
+        faceDog.name = "Cão"
+        vazio.name = ""
+        faceDuck.name = "Pato"
+        faceRat.name = "Rato"
         
-        let random3D: [SCNReferenceNode] = [faceCat, faceRat, faceDuck]
+        let random3D: [SCNReferenceNode] = [faceCat, faceRat, faceDuck, faceDog]
         var random = Int.random(in: 0..<random3D.count)
         
         while arrayMascaras.contains(random3D[random].name ?? "") {
             random = Int.random(in: 0..<random3D.count)
-            if arrayMascaras.count == 3 {
+            if arrayMascaras.count == 4 {
                 arrayMascaras.append(vazio.name!)
                 return vazio
             }
