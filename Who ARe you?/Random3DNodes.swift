@@ -16,6 +16,8 @@ class Random3DNodes: SCNReferenceNode {
     lazy var vazio = SCNReferenceNode(named: "vazio")
     lazy var faceDuck = SCNReferenceNode(named: "duck")
     lazy var faceRat = SCNReferenceNode(named: "rat")
+    lazy var faceMonkey = SCNReferenceNode(named: "monkey")
+    lazy var faceDorime = SCNReferenceNode(named: "ratDorime")
     
     lazy var arrayMascaras: [String] = []
     
@@ -26,13 +28,14 @@ class Random3DNodes: SCNReferenceNode {
         vazio.name = ""
         faceDuck.name = "Pato"
         faceRat.name = "Rato"
+        faceMonkey.name = "Macaco"
         
-        let random3D: [SCNReferenceNode] = [faceCat, faceRat, faceDuck, faceDog]
+        let random3D: [SCNReferenceNode] = [faceCat, faceRat, faceDuck, faceDog, faceMonkey]
         var random = Int.random(in: 0..<random3D.count)
         
         while arrayMascaras.contains(random3D[random].name ?? "") {
             random = Int.random(in: 0..<random3D.count)
-            if arrayMascaras.count == 4 {
+            if arrayMascaras.count == 5 {
                 arrayMascaras.append(vazio.name!)
                 return vazio
             }
