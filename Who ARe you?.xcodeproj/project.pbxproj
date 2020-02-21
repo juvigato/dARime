@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0F15A30A2400313100C6D985 /* AMENO.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 0F15A3092400313100C6D985 /* AMENO.mp3 */; };
+		0F15A30F240032AA00C6D985 /* Explode.scnp in Resources */ = {isa = PBXBuildFile; fileRef = 0F15A30E240032AA00C6D985 /* Explode.scnp */; };
 		BC06966823FB06C500502128 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC06966723FB06C500502128 /* AppDelegate.swift */; };
 		BC06966A23FB06C500502128 /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = BC06966923FB06C500502128 /* art.scnassets */; };
 		BC06966C23FB06C500502128 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC06966B23FB06C500502128 /* ViewController.swift */; };
@@ -18,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0F15A3092400313100C6D985 /* AMENO.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = AMENO.mp3; sourceTree = "<group>"; };
+		0F15A30E240032AA00C6D985 /* Explode.scnp */ = {isa = PBXFileReference; lastKnownFileType = file.scp; path = Explode.scnp; sourceTree = "<group>"; };
 		BC06966423FB06C500502128 /* Who ARe you?.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Who ARe you?.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC06966723FB06C500502128 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BC06966923FB06C500502128 /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -41,6 +45,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0F15A30D2400329200C6D985 /* Particles */ = {
+			isa = PBXGroup;
+			children = (
+				0F15A30E240032AA00C6D985 /* Explode.scnp */,
+			);
+			path = Particles;
+			sourceTree = "<group>";
+		};
 		BC06965B23FB06C500502128 = {
 			isa = PBXGroup;
 			children = (
@@ -60,6 +72,7 @@
 		BC06966623FB06C500502128 /* Who ARe you? */ = {
 			isa = PBXGroup;
 			children = (
+				0F15A30D2400329200C6D985 /* Particles */,
 				BC06966723FB06C500502128 /* AppDelegate.swift */,
 				BC06966923FB06C500502128 /* art.scnassets */,
 				BC06966B23FB06C500502128 /* ViewController.swift */,
@@ -68,6 +81,7 @@
 				BC06966D23FB06C500502128 /* Main.storyboard */,
 				BC06967023FB06C800502128 /* Assets.xcassets */,
 				BC06967223FB06C800502128 /* LaunchScreen.storyboard */,
+				0F15A3092400313100C6D985 /* AMENO.mp3 */,
 				BC06967523FB06C800502128 /* Info.plist */,
 			);
 			path = "Who ARe you?";
@@ -132,9 +146,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC06966A23FB06C500502128 /* art.scnassets in Resources */,
+				0F15A30A2400313100C6D985 /* AMENO.mp3 in Resources */,
 				BC06967423FB06C800502128 /* LaunchScreen.storyboard in Resources */,
 				BC06967123FB06C800502128 /* Assets.xcassets in Resources */,
 				BC06966F23FB06C500502128 /* Main.storyboard in Resources */,
+				0F15A30F240032AA00C6D985 /* Explode.scnp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,7 +318,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "br.developeracademy.Who-ARe-you-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -320,7 +336,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "br.developeracademy.Who-ARe-you-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
