@@ -41,6 +41,10 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     var arrayDog: [String] = ["Doméstico", "Lambida"]
     var arrayMouse: [String] = ["Roedor", "Queijo"]
     var arrayMonkey: [String] = ["Banana", "Árvores"]
+    
+    var music = SCNAudioSource(fileNamed: "AMENO.mp3")!
+    lazy var action = SCNAction.playAudio(music, waitForCompletion: false)
+    let explosion = SCNParticleSystem(named: "Explode", inDirectory: nil)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,6 +57,8 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         sceneView.delegate = self
         viewHeight = self.view.frame.height
         viewWidth = self.view.frame.width
+        
+        sceneView.scene.rootNode.runAction(action)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -107,7 +113,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
             } else if face.name == "Rato" {
                 label.text = arrayMouse[0]
             } else if face.name == "Macaco" {
-                label.text = arrayDog[0]
+                label.text = arrayMonkey[0]
             }
         } else if nome == "palavra2" {
             label.center = CGPoint(x: (self.view.frame.width/1.3), y: (self.view.frame.height)/1.15)
@@ -162,7 +168,7 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
             strongSelf.lblTimer.text = "\(strongSelf.tempo)"
             
             //strongSelf.timer.invalidate() isso para o timer
-            if strongSelf.tempo == 0 || strongSelf.random.arrayMascaras.count == 5 {
+            if strongSelf.tempo == 0 || strongSelf.random.arrayMascaras.count == 6 {
                 strongSelf.face.removeFromParentNode()
                 strongSelf.card.removeFromSuperview()
                 strongSelf.timer.invalidate()
@@ -207,12 +213,15 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     }
     
     @objc func handlePlayButton(_ gestureRecognize: UIGestureRecognizer){
+        face.removeParticleSystem(explosion!)
+        face.removeFromParentNode()
         face = random.random3DPicker()
         createLbl(label: lblNome, width: 200, size: 40, nome: "mascara")
         node.addChildNode(face)
         createButton(button: passButton, divisor: 500, title: "Errou", size: 35, width: 160)
         createButton(button: checkButton, divisor: 1.6, title: "Acertou", size: 35, width: 160)
         createCard()
+        sceneView.scene.rootNode.removeAllAudioPlayers()
         playButton.removeFromSuperview()
     }
     
@@ -232,9 +241,11 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
     }
     
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
-        
         guard let faceAnchor = anchor as? ARFaceAnchor else { return nil }
         currentFaceAnchor = faceAnchor
+        face = random.faceDorime
+        node.addChildNode(face)
+        face.addParticleSystem(explosion!)
         return node
     }
         
@@ -243,8 +254,9 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         guard let faceAnchor = anchor as? ARFaceAnchor
         else { return }
         
-        if tempo == 0 || random.arrayMascaras.count == 5 {
+        if tempo == 0 || random.arrayMascaras.count == 6 {
             face.removeFromParentNode()
+            
         }
     }
 }
