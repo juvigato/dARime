@@ -71,9 +71,58 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         card.backgroundColor = .orange
         card.frame = CGRect(x: view.frame.width/2, y: view.frame.height/2, width: self.view.frame.width , height: 150)
         card.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height) - 90)
-        createLbl(label: lblPalavra1, width: 250, size: 30, nome: arrayCat[0])
-        createLbl(label: lblPalavra2, width: 250, size: 30, nome: arrayCat[1])
+        createLbl(label: lblPalavra1, width: 250, size: 30, nome: "palavra1")
+        createLbl(label: lblPalavra2, width: 250, size: 30, nome: "palavra2")
         sceneView.addSubview(card)
+    }
+    
+    func createLbl(label: UILabel, width: Int, size:CGFloat, nome: String) {
+        label.frame = CGRect(x: 0, y: 0, width: width, height: 100)
+        label.font = lblTimer.font.withSize(size)
+        label.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        label.textAlignment = .center
+        if nome == "Pontuação" {
+            label.text = ("Pontuação: \(String(pontuação))")
+            label.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/10)
+        } else if nome == "mascara" {
+            label.center = CGPoint(x: (self.view.frame.width/5), y: (self.view.frame.height)/1.13)
+            label.text = face.name
+        } else if nome == "" {
+            label.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/10)
+        } else {
+            changeLbl(label: label, nome: nome)
+        }
+        self.view.addSubview(label)
+    }
+    
+    func changeLbl(label: UILabel, nome: String) {
+        if nome == "palavra1" {
+            label.center = CGPoint(x: (self.view.frame.width/1.3), y: (self.view.frame.height)/1.1)
+            if face.name == "Gato" {
+                label.text = arrayCat[0]
+            } else if face.name == "Cão" {
+                label.text = arrayDog[0]
+            } else if face.name == "Pato" {
+                label.text = arrayDuck[0]
+            } else if face.name == "Rato" {
+                label.text = arrayMouse[0]
+            } else if face.name == "Macaco" {
+                label.text = arrayDog[0]
+            }
+        } else if nome == "palavra2" {
+            label.center = CGPoint(x: (self.view.frame.width/1.3), y: (self.view.frame.height)/1.15)
+            if face.name == "Gato" {
+                label.text = arrayCat[1]
+            } else if face.name == "Cão" {
+                label.text = arrayDog[1]
+            } else if face.name == "Pato" {
+                label.text = arrayDuck[1]
+            } else if face.name == "Rato" {
+                label.text = arrayMouse[1]
+            } else if face.name == "Macaco" {
+                label.text = arrayMonkey[1]
+            }
+        }
     }
     
     func createButton(button: UIButton, divisor:CGFloat, title: String, size: CGFloat, width: CGFloat) {
@@ -96,29 +145,6 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
             button.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/1.3)
         }
         sceneView.addSubview(button)
-    }
-    
-    func createLbl(label: UILabel, width: Int, size:CGFloat, nome: String) {
-        label.frame = CGRect(x: 0, y: 0, width: width, height: 100)
-        label.font = lblTimer.font.withSize(size)
-        label.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        label.textAlignment = .center
-        if nome == "Pontuação" {
-            label.text = ("Pontuação: \(String(pontuação))")
-            label.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/10)
-        } else if nome == "mascara" {
-            label.center = CGPoint(x: (self.view.frame.width/5), y: (self.view.frame.height)/1.13)
-            label.text = face.name
-        } else if nome == "" {
-            label.center = CGPoint(x: (self.view.frame.width/2), y: (self.view.frame.height)/10)
-        } else if nome == arrayCat[0] {
-            label.center = CGPoint(x: (self.view.frame.width/1.3), y: (self.view.frame.height)/1.1)
-            label.text = nome
-        } else if nome == arrayCat[1] {
-            label.center = CGPoint(x: (self.view.frame.width/1.3), y: (self.view.frame.height)/1.16)
-            label.text = nome
-        }
-        self.view.addSubview(label)
     }
     
     func iniciarTimer(){
@@ -144,6 +170,8 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
                 strongSelf.lblTimer.removeFromSuperview()
                 strongSelf.passButton.removeFromSuperview()
                 strongSelf.checkButton.removeFromSuperview()
+                strongSelf.lblPalavra2.removeFromSuperview()
+                strongSelf.lblPalavra1.removeFromSuperview()
                 strongSelf.createLbl(label: strongSelf.lblPontuacao, width: 250, size: 40, nome: "Pontuação")
                 strongSelf.createButton(button: strongSelf.repeatButton, divisor: 500, title: "Jogar de novo", size: 35, width: 250)
                 strongSelf.lblNome.text = ""
@@ -159,6 +187,8 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         if face.name != "" {
             pontuação += 1
             face = random.random3DPicker()
+            changeLbl(label: lblPalavra1, nome: "palavra1")
+            changeLbl(label: lblPalavra2, nome: "palavra2")
             createLbl(label: lblNome, width: 200, size: 40, nome: "mascara")
             node.addChildNode(face)
         }
@@ -170,6 +200,8 @@ class ViewController: UIViewController, ARSessionDelegate, ARSCNViewDelegate {
         if face.name != "" {
             face = random.random3DPicker()
             createLbl(label: lblNome, width: 200, size: 40, nome: "mascara")
+            changeLbl(label: lblPalavra1, nome: "palavra1")
+            changeLbl(label: lblPalavra2, nome: "palavra2")
             node.addChildNode(face)
         }
     }
